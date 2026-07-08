@@ -1,3 +1,10 @@
+import {
+  formatCurrency,
+  getAprForAmount,
+  calculatePayment,
+  buildLoanApplicationPayload,
+} from "./loan-utils.js";
+
 (function () {
   const loanAmount = document.querySelector("#loan-amount");
   const amountOutput = document.querySelector("#loan-amount-output");
@@ -12,14 +19,6 @@
   const successBox = document.querySelector("#application-success");
   const readinessCard = document.querySelector("#readiness-card");
 
-  class LoanSubmissionError extends Error {
-    constructor(message, context) {
-      super(message);
-      this.name = "LoanSubmissionError";
-      this.context = context;
-    }
-  }
-
   const appState = {
     // Regression: this should be initialized when the application loads.
     applicationSession: undefined,
@@ -29,32 +28,15 @@
   let submitAttempts = 0;
   let estimateFrozen = false;
 
-  const formatCurrency = (value) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0,
-    }).format(value);
-
   const getSelectedTerm = () => {
     const checked = document.querySelector('input[name="loanTerm"]:checked');
     return Number(checked?.value || 48);
   };
 
-  const calculatePayment = (principal, apr, months) => {
-    const monthlyRate = apr / 100 / 12;
-    return principal * (monthlyRate / (1 - Math.pow(1 + monthlyRate, -months)));
-  };
-
-  const createApplicationSession = () => ({
-    id: "loan-session-" + Date.now().toString(36),
-    createdAt: new Date().toISOString(),
-  });
-
   const updateSummary = () => {
     const amount = Number(loanAmount.value);
     const term = getSelectedTerm();
-    const apr = amount > 50000 ? 9.34 : amount > 25000 ? 8.74 : 7.89;
+    const apr = getAprForAmount(amount);
     const payment = calculatePayment(amount, apr, term);
 
     amountOutput.value = formatCurrency(amount);
@@ -73,25 +55,15 @@
     annualIncome: Number(document.querySelector("#annual-income").value || 0),
   });
 
-  const buildLoanApplicationPayload = () => {
-    const applicationSessionId = appState.applicationSession?.id;
-
-    if (!applicationSessionId) {
-      throw new LoanSubmissionError("applicationSessionId is undefined", {
-        reason: "appState.applicationSession was not initialized",
-        expectedStateShape: "{ applicationSession: { id: string } }",
-      });
-    }
-
-    return {
-      applicationSessionId,
+  const buildPayload = () =>
+    buildLoanApplicationPayload({
+      applicationSession: appState.applicationSession,
       amount: Number(loanAmount.value),
       purpose: purpose.value,
       term: getSelectedTerm(),
       estimatedMonthlyPayment: summaryPayment.textContent,
       applicant: getApplicantDetails(),
-    };
-  };
+    });
 
   const submitLoanApplication = (payload) =>
     fetch("/api/loan-applications", {
@@ -194,7 +166,7 @@
     let payload;
 
     try {
-      payload = buildLoanApplicationPayload();
+      payload = buildPayload();
     } catch (error) {
       console.error(error.name + ": " + error.message, {
         submitAttempts,
