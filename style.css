@@ -107,6 +107,13 @@ a {
   display: flex;
   gap: 6px;
   flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-links li {
+  display: flex;
 }
 
 .nav-links a {
@@ -265,11 +272,21 @@ main {
   gap: 7px;
 }
 
+.fieldset-field {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 label,
 .field-label {
   color: #273246;
   font-size: 14px;
   font-weight: 700;
+}
+
+.fieldset-field legend {
+  padding: 0;
 }
 
 .label-row,
@@ -353,19 +370,20 @@ input[type="range"] {
 
 .consent-row {
   display: grid;
-  grid-template-columns: 18px 1fr;
+  grid-template-columns: 24px 1fr;
   gap: 12px;
   align-items: start;
   padding: 15px;
   background: var(--soft);
   border: 1px solid var(--line);
   border-radius: 6px;
+  cursor: pointer;
 }
 
 .consent-row input {
-  width: 18px;
-  min-height: 18px;
-  margin-top: 2px;
+  width: 24px;
+  min-height: 24px;
+  margin: 0;
   accent-color: var(--blue);
 }
 

@@ -4,6 +4,42 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Charlatan Bank | Personal Loan Application</title>
+    <style>
+      .nav-links {
+        display: flex;
+        flex: 1;
+        gap: 6px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .nav-links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 10px 11px;
+      }
+
+      input,
+      select,
+      button {
+        min-height: 44px;
+      }
+
+      .consent-row {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        gap: 12px;
+        align-items: start;
+      }
+
+      .consent-row input {
+        width: 24px;
+        min-height: 24px;
+        margin: 0;
+      }
+    </style>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -21,15 +57,15 @@
             <span class="brand-subname">Bank</span>
           </span>
         </a>
-        <div class="nav-links">
-          <a href="#">Checking</a>
-          <a href="#">Savings & CDs</a>
-          <a href="#">Credit Cards</a>
-          <a href="#">Home Loans</a>
-          <a class="active" href="#">Personal Loans</a>
-          <a href="#">Mortgages</a>
-          <a href="#">Support</a>
-        </div>
+        <ul class="nav-links">
+          <li><a href="#">Checking</a></li>
+          <li><a href="#">Savings & CDs</a></li>
+          <li><a href="#">Credit Cards</a></li>
+          <li><a href="#">Home Loans</a></li>
+          <li><a class="active" href="#">Personal Loans</a></li>
+          <li><a href="#">Mortgages</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
         <div class="secure-note" aria-label="Secure session">
           <span class="lock-dot"></span>
           Secure session
@@ -94,9 +130,9 @@
                 <p class="hint">Used only to personalize your loan terms.</p>
               </div>
 
-              <div class="field">
-                <span class="field-label">Repayment term</span>
-                <div class="term-options" role="radiogroup" aria-label="Repayment term">
+              <fieldset class="field fieldset-field">
+                <legend class="field-label">Repayment term</legend>
+                <div class="term-options">
                   <label>
                     <input type="radio" name="loanTerm" value="36" />
                     <span>36 months</span>
@@ -110,7 +146,7 @@
                     <span>60 months</span>
                   </label>
                 </div>
-              </div>
+              </fieldset>
             </section>
 
             <section class="form-section" aria-labelledby="applicant-title">
@@ -157,13 +193,13 @@
                 <h2 id="submit-title">Review and submit</h2>
               </div>
 
-              <div class="consent-row">
+              <label class="consent-row" for="consent">
                 <input id="consent" name="consent" type="checkbox" required />
                 <span id="consent-label" class="consent-label">
                   I agree to receive application updates and authorize Charlatan
                   Bank to verify my information.
                 </span>
-              </div>
+              </label>
 
               <div class="form-actions">
                 <button id="submit-application" class="primary-button" type="submit">
