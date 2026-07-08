@@ -110,6 +110,9 @@ a {
 }
 
 .nav-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
   padding: 26px 11px 23px;
   color: #2f3848;
   border-bottom: 4px solid transparent;
