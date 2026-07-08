@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Charlatan Bank | Personal Loan Application</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="top-strip">
+        <span>Personal</span>
+        <span>Small Business</span>
+        <span>Wealth Management</span>
+        <span class="top-strip-right">Schedule an appointment &nbsp; | &nbsp; Help &nbsp; | &nbsp; Search</span>
+      </div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a class="brand" href="#" aria-label="Charlatan Bank home">
+          <span class="brand-lockup">
+            <span class="brand-name">Charlatan</span>
+            <span class="brand-subname">Bank</span>
+          </span>
+        </a>
+        <div class="nav-links">
+          <a href="#">Checking</a>
+          <a href="#">Savings & CDs</a>
+          <a href="#">Credit Cards</a>
+          <a href="#">Home Loans</a>
+          <a class="active" href="#">Personal Loans</a>
+          <a href="#">Mortgages</a>
+          <a href="#">Support</a>
+        </div>
+        <div class="secure-note" aria-label="Secure session">
+          <span class="lock-dot"></span>
+          Secure session
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="application-shell" aria-labelledby="page-title">
+        <div class="intro-panel">
+          <p class="eyebrow">Personal loan application</p>
+          <h1 id="page-title">Finish your Charlatan personal loan application</h1>
+          <p>
+            Your offer is ready. Review your amount, confirm your information
+            and submit your application for a fixed-rate personal loan.
+          </p>
+          <div class="progress-track" aria-label="Application progress">
+            <span class="done">Offer</span>
+            <span class="done">Details</span>
+            <span class="current">Submit</span>
+          </div>
+        </div>
+
+        <div class="content-grid">
+          <form class="loan-form" id="loan-form" novalidate>
+            <section class="form-section" aria-labelledby="loan-details-title">
+              <div class="section-heading">
+                <p class="step-label">Step 1 of 3</p>
+                <h2 id="loan-details-title">Loan details</h2>
+              </div>
+
+              <div class="field field-wide">
+                <div class="label-row">
+                  <label for="loan-amount">Loan amount</label>
+                  <output id="loan-amount-output" for="loan-amount">$32,500</output>
+                </div>
+                <input
+                  id="loan-amount"
+                  name="loanAmount"
+                  type="range"
+                  min="5000"
+                  max="75000"
+                  step="500"
+                  value="32500"
+                />
+                <div class="range-row" aria-hidden="true">
+                  <span>$5,000</span>
+                  <span>$75,000</span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="loan-purpose">Loan purpose</label>
+                <select id="loan-purpose" name="loanPurpose" required>
+                  <option value="">Choose a purpose</option>
+                  <option value="debt">Debt consolidation</option>
+                  <option value="home">Home improvement</option>
+                  <option value="medical">Medical expense</option>
+                  <option value="major">Major purchase</option>
+                  <option value="other">Other personal expense</option>
+                </select>
+                <p class="hint">Used only to personalize your loan terms.</p>
+              </div>
+
+              <div class="field">
+                <span class="field-label">Repayment term</span>
+                <div class="term-options" role="radiogroup" aria-label="Repayment term">
+                  <label>
+                    <input type="radio" name="loanTerm" value="36" />
+                    <span>36 months</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="loanTerm" value="48" checked />
+                    <span>48 months</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="loanTerm" value="60" />
+                    <span>60 months</span>
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <section class="form-section" aria-labelledby="applicant-title">
+              <div class="section-heading">
+                <p class="step-label">Step 2 of 3</p>
+                <h2 id="applicant-title">Applicant details</h2>
+              </div>
+
+              <div class="field two-up">
+                <label for="first-name">First name</label>
+                <input id="first-name" name="firstName" type="text" autocomplete="given-name" required />
+              </div>
+              <div class="field two-up">
+                <label for="last-name">Last name</label>
+                <input id="last-name" name="lastName" type="text" autocomplete="family-name" required />
+              </div>
+              <div class="field">
+                <label for="email">Email address</label>
+                <input id="email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="field">
+                <label for="phone">Mobile phone</label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="(555) 123-4567" required />
+              </div>
+              <div class="field">
+                <label for="employment-status">Employment status</label>
+                <select id="employment-status" name="employmentStatus" required>
+                  <option value="">Select status</option>
+                  <option value="employed">Employed full time</option>
+                  <option value="self-employed">Self-employed</option>
+                  <option value="retired">Retired</option>
+                  <option value="student">Student</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="annual-income">Annual income</label>
+                <input id="annual-income" name="annualIncome" type="number" min="0" step="1000" placeholder="85000" required />
+              </div>
+            </section>
+
+            <section class="form-section submit-section" aria-labelledby="submit-title">
+              <div class="section-heading">
+                <p class="step-label">Step 3 of 3</p>
+                <h2 id="submit-title">Review and submit</h2>
+              </div>
+
+              <div class="consent-row">
+                <input id="consent" name="consent" type="checkbox" required />
+                <span id="consent-label" class="consent-label">
+                  I agree to receive application updates and authorize Charlatan
+                  Bank to verify my information.
+                </span>
+              </div>
+
+              <div class="form-actions">
+                <button id="submit-application" class="primary-button" type="submit">
+                  Submit application
+                </button>
+                <p class="submit-note">Most applicants receive a decision in less than 60 seconds.</p>
+              </div>
+
+              <div id="application-error" class="application-error" role="alert" hidden>
+                <strong>We are unable to submit your application right now.</strong>
+                <span>Please try again. If this continues, call online banking support.</span>
+              </div>
+
+              <div id="application-success" class="application-success" role="status" hidden>
+                <strong>Your application was submitted.</strong>
+                <span>We are reviewing your request and will send a decision shortly.</span>
+              </div>
+            </section>
+
+            <section class="legal-disclosures" aria-labelledby="legal-title">
+              <h2 id="legal-title">Important information and disclosures</h2>
+              <p>
+                Charlatan Bank is a fictional financial institution used for
+                demonstration purposes. Loan offers, rates, payments, terms and
+                approval messages shown on this page are sample content and do
+                not represent a real extension of credit.
+              </p>
+              <p>
+                Final eligibility would depend on verification of identity,
+                income, employment, credit history and other underwriting
+                criteria. Submitting an application may require additional
+                documentation, and approval is not guaranteed.
+              </p>
+              <p>
+                Estimated monthly payments are for illustration only and may not
+                include taxes, fees, insurance, late charges or other amounts
+                that could apply to an actual loan account.
+              </p>
+              <p>
+                By continuing, applicants acknowledge that electronic records,
+                notices and communications may be used during the application
+                process. This sample page does not collect, store or transmit
+                real banking information.
+              </p>
+            </section>
+          </form>
+
+          <aside class="summary-panel" aria-label="Loan summary">
+            <div class="summary-card sticky-summary">
+              <p class="summary-kicker">Your estimated offer</p>
+              <div class="approval-box">
+                <span class="approval-dot"></span>
+                Prequalified
+              </div>
+
+              <dl class="summary-list">
+                <div>
+                  <dt>Loan amount</dt>
+                  <dd id="summary-amount">$32,500</dd>
+                </div>
+                <div>
+                  <dt>Estimated APR</dt>
+                  <dd id="summary-apr">8.74%</dd>
+                </div>
+                <div>
+                  <dt>Monthly payment</dt>
+                  <dd id="summary-payment">$804</dd>
+                </div>
+                <div>
+                  <dt>Term</dt>
+                  <dd id="summary-term">48 months</dd>
+                </div>
+              </dl>
+
+              <div class="readiness-card" id="readiness-card">
+                <span class="ready-pill">Application ready</span>
+                <p>Your selected offer is available today, subject to final review.</p>
+              </div>
+
+              <div class="support-box">
+                <p class="support-title">Need help?</p>
+                <p>Loan specialists are available until 9 PM ET.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Charlatan Bank is a fictional demo brand.</span>
+      <span>Member FDIC-style sample page for hackathon testing.</span>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
