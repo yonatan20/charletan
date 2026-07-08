@@ -2,6 +2,7 @@ import {
   formatCurrency,
   getAprForAmount,
   calculatePayment,
+  createApplicationSession,
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
@@ -17,16 +18,11 @@ import {
   const form = document.querySelector("#loan-form");
   const errorBox = document.querySelector("#application-error");
   const successBox = document.querySelector("#application-success");
-  const readinessCard = document.querySelector("#readiness-card");
-
   const appState = {
-    // Regression: this should be initialized when the application loads.
-    applicationSession: undefined,
+    applicationSession: createApplicationSession(),
   };
 
-  let amountChangeCount = 0;
   let submitAttempts = 0;
-  let estimateFrozen = false;
 
   const getSelectedTerm = () => {
     const checked = document.querySelector('input[name="loanTerm"]:checked');
@@ -90,28 +86,10 @@ import {
   };
 
   loanAmount.addEventListener("input", () => {
-    amountChangeCount += 1;
-
-    if (amountChangeCount >= 4 && !estimateFrozen) {
-      estimateFrozen = true;
-      console.warn(
-        "LoanEstimateWarning: monthly payment estimate stopped updating after amount change",
-        {
-          selectedAmount: Number(loanAmount.value),
-          amountChangeCount,
-        }
-      );
-      readinessCard.classList.add("is-stale");
-      return;
-    }
-
-    if (!estimateFrozen) {
-      updateSummary();
-    }
+    updateSummary();
 
     logJourneyEvent("loan_amount_changed", {
       selectedAmount: Number(loanAmount.value),
-      estimateFrozen,
     });
   });
 
