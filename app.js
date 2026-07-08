@@ -2,6 +2,7 @@ import {
   formatCurrency,
   getAprForAmount,
   calculatePayment,
+  createApplicationSession,
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
@@ -13,15 +14,13 @@ import {
   const summaryApr = document.querySelector("#summary-apr");
   const summaryTerm = document.querySelector("#summary-term");
   const purpose = document.querySelector("#loan-purpose");
-  const consentLabel = document.querySelector("#consent-label");
   const form = document.querySelector("#loan-form");
   const errorBox = document.querySelector("#application-error");
   const successBox = document.querySelector("#application-success");
   const readinessCard = document.querySelector("#readiness-card");
 
   const appState = {
-    // Regression: this should be initialized when the application loads.
-    applicationSession: undefined,
+    applicationSession: createApplicationSession(),
   };
 
   let amountChangeCount = 0;
@@ -135,13 +134,6 @@ import {
     }
   });
 
-  consentLabel.addEventListener("click", () => {
-    console.warn(
-      "ConsentClickWarning: consent label received click but checkbox state did not change"
-    );
-    consentLabel.classList.add("label-clicked");
-  });
-
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     submitAttempts += 1;
@@ -151,17 +143,6 @@ import {
       logJourneyEvent("submit_blocked_by_validation", { submitAttempts });
       return;
     }
-
-    errorBox.hidden = false;
-    successBox.hidden = true;
-    errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
-
-    console.error("Potential lost conversion", {
-      product: "personal_loan",
-      submitAttempts,
-      requestedAmount: Number(loanAmount.value),
-      businessImpact: "qualified borrower could not submit application",
-    });
 
     let payload;
 
@@ -176,13 +157,13 @@ import {
         context: error.context,
       });
 
-      window.setTimeout(() => {
-        throw error;
-      }, 0);
+      errorBox.hidden = false;
+      successBox.hidden = true;
+      errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
       return;
     }
 
-    submitLoanApplication(payload)
+    submitLoanApplicationDemoMock(payload)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Submission endpoint returned ${response.status}`);
