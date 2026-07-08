@@ -351,6 +351,12 @@ input[type="range"] {
   background: #fff4f4;
 }
 
+.term-options .dead-term-option.rage-clicked {
+  border-color: #d5a11e;
+  background: #fff9e8;
+  box-shadow: inset 0 0 0 1px rgba(213, 161, 30, 0.45);
+}
+
 .consent-row {
   display: grid;
   grid-template-columns: 18px 1fr;

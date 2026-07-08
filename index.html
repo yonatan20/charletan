@@ -12,7 +12,7 @@
         <span>Personal</span>
         <span>Small Business</span>
         <span>Wealth Management</span>
-        <span class="top-strip-right">Schedule an appointment now &nbsp; | &nbsp; Help &nbsp; | &nbsp; Search</span>
+        <span class="top-strip-right">Schedule an appointment &nbsp; | &nbsp; Help &nbsp; | &nbsp; Search</span>
       </div>
       <nav class="main-nav" aria-label="Main navigation">
         <a class="brand" href="#" aria-label="Charlatan Bank home">
@@ -105,8 +105,8 @@
                     <input type="radio" name="loanTerm" value="48" checked />
                     <span>48 months</span>
                   </label>
-                  <label>
-                    <input type="radio" name="loanTerm" value="60" />
+                  <label class="dead-term-option" id="term-60-option" title="60 month term">
+                    <input id="term-60" type="radio" name="loanTerm" value="60" />
                     <span>60 months</span>
                   </label>
                 </div>
@@ -258,6 +258,6 @@
       <span>Member FDIC-style sample page for hackathon testing.</span>
     </footer>
 
-    <script type="module" src="app.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>
