@@ -5,19 +5,63 @@ import {
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
-(function () {
-  const loanAmount = document.querySelector("#loan-amount");
-  const amountOutput = document.querySelector("#loan-amount-output");
-  const summaryAmount = document.querySelector("#summary-amount");
-  const summaryPayment = document.querySelector("#summary-payment");
-  const summaryApr = document.querySelector("#summary-apr");
-  const summaryTerm = document.querySelector("#summary-term");
-  const purpose = document.querySelector("#loan-purpose");
-  const consentLabel = document.querySelector("#consent-label");
-  const form = document.querySelector("#loan-form");
-  const errorBox = document.querySelector("#application-error");
-  const successBox = document.querySelector("#application-success");
-  const readinessCard = document.querySelector("#readiness-card");
+const submitLoanApplication = (payload) =>
+  fetch("/api/loan-applications", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+export const submitLoanApplicationDemoMock = (payload) =>
+  Promise.resolve({
+    ok: true,
+    status: 201,
+    json: () =>
+      Promise.resolve({
+        confirmationId: "PL-" + payload.applicationSessionId.slice(-8).toUpperCase(),
+      }),
+  });
+
+const logJourneyEvent = (eventName, details = {}) => {
+  console.info("[CharlatanLoanJourney]", eventName, {
+    timestamp: new Date().toISOString(),
+    ...details,
+  });
+};
+
+export const initApplication = (doc = document, options = {}) => {
+  const loanAmount = doc.querySelector("#loan-amount");
+  const amountOutput = doc.querySelector("#loan-amount-output");
+  const summaryAmount = doc.querySelector("#summary-amount");
+  const summaryPayment = doc.querySelector("#summary-payment");
+  const summaryApr = doc.querySelector("#summary-apr");
+  const summaryTerm = doc.querySelector("#summary-term");
+  const purpose = doc.querySelector("#loan-purpose");
+  const consentCheckbox = doc.querySelector("#consent");
+  const consentLabel = doc.querySelector("#consent-label");
+  const form = doc.querySelector("#loan-form");
+  const errorBox = doc.querySelector("#application-error");
+  const successBox = doc.querySelector("#application-success");
+  const readinessCard = doc.querySelector("#readiness-card");
+  const submitApplication = options.submitApplication ?? submitLoanApplication;
+
+  if (
+    !loanAmount ||
+    !amountOutput ||
+    !summaryAmount ||
+    !summaryPayment ||
+    !summaryApr ||
+    !summaryTerm ||
+    !purpose ||
+    !consentCheckbox ||
+    !consentLabel ||
+    !form ||
+    !errorBox ||
+    !successBox ||
+    !readinessCard
+  ) {
+    return;
+  }
 
   const appState = {
     // Regression: this should be initialized when the application loads.
@@ -29,7 +73,7 @@ import {
   let estimateFrozen = false;
 
   const getSelectedTerm = () => {
-    const checked = document.querySelector('input[name="loanTerm"]:checked');
+    const checked = doc.querySelector('input[name="loanTerm"]:checked');
     return Number(checked?.value || 48);
   };
 
@@ -47,12 +91,12 @@ import {
   };
 
   const getApplicantDetails = () => ({
-    firstName: document.querySelector("#first-name").value.trim(),
-    lastName: document.querySelector("#last-name").value.trim(),
-    email: document.querySelector("#email").value.trim(),
-    phone: document.querySelector("#phone").value.trim(),
-    employmentStatus: document.querySelector("#employment-status").value,
-    annualIncome: Number(document.querySelector("#annual-income").value || 0),
+    firstName: doc.querySelector("#first-name").value.trim(),
+    lastName: doc.querySelector("#last-name").value.trim(),
+    email: doc.querySelector("#email").value.trim(),
+    phone: doc.querySelector("#phone").value.trim(),
+    employmentStatus: doc.querySelector("#employment-status").value,
+    annualIncome: Number(doc.querySelector("#annual-income").value || 0),
   });
 
   const buildPayload = () =>
@@ -64,30 +108,6 @@ import {
       estimatedMonthlyPayment: summaryPayment.textContent,
       applicant: getApplicantDetails(),
     });
-
-  const submitLoanApplication = (payload) =>
-    fetch("/api/loan-applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-  const submitLoanApplicationDemoMock = (payload) =>
-    Promise.resolve({
-      ok: true,
-      status: 201,
-      json: () =>
-        Promise.resolve({
-          confirmationId: "PL-" + payload.applicationSessionId.slice(-8).toUpperCase(),
-        }),
-    });
-
-  const logJourneyEvent = (eventName, details = {}) => {
-    console.info("[CharlatanLoanJourney]", eventName, {
-      timestamp: new Date().toISOString(),
-      ...details,
-    });
-  };
 
   loanAmount.addEventListener("input", () => {
     amountChangeCount += 1;
@@ -115,7 +135,7 @@ import {
     });
   });
 
-  document.querySelectorAll('input[name="loanTerm"]').forEach((termInput) => {
+  doc.querySelectorAll('input[name="loanTerm"]').forEach((termInput) => {
     termInput.addEventListener("change", () => {
       updateSummary();
       logJourneyEvent("loan_term_changed", { term: getSelectedTerm() });
@@ -135,11 +155,9 @@ import {
     }
   });
 
-  consentLabel.addEventListener("click", () => {
-    console.warn(
-      "ConsentClickWarning: consent label received click but checkbox state did not change"
-    );
-    consentLabel.classList.add("label-clicked");
+  consentCheckbox.addEventListener("change", () => {
+    consentLabel.classList.toggle("label-clicked", consentCheckbox.checked);
+    logJourneyEvent("consent_toggled", { checked: consentCheckbox.checked });
   });
 
   form.addEventListener("submit", (event) => {
@@ -182,7 +200,7 @@ import {
       return;
     }
 
-    submitLoanApplication(payload)
+    submitApplication(payload)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Submission endpoint returned ${response.status}`);
@@ -213,4 +231,8 @@ import {
     product: "personal_loan",
     prequalified: true,
   });
-})();
+};
+
+if (typeof document !== "undefined") {
+  initApplication();
+}
