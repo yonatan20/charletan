@@ -110,7 +110,10 @@ a {
 }
 
 .nav-links a {
+  display: inline-flex;
+  align-items: center;
   padding: 26px 11px 23px;
+  min-height: 24px;
   color: #2f3848;
   border-bottom: 4px solid transparent;
   font-size: 15px;
@@ -286,6 +289,7 @@ output {
 
 input,
 select {
+  display: block;
   width: 100%;
   min-height: 44px;
   padding: 10px 12px;
@@ -294,6 +298,7 @@ select {
   border: 1px solid #b8c1cf;
   border-radius: 4px;
   font: inherit;
+  line-height: 1.4;
 }
 
 input:focus,
@@ -353,7 +358,7 @@ input[type="range"] {
 
 .consent-row {
   display: grid;
-  grid-template-columns: 18px 1fr;
+  grid-template-columns: 24px 1fr;
   gap: 12px;
   align-items: start;
   padding: 15px;
@@ -363,15 +368,20 @@ input[type="range"] {
 }
 
 .consent-row input {
-  width: 18px;
-  min-height: 18px;
-  margin-top: 2px;
+  width: 24px;
+  min-height: 24px;
+  padding: 0;
+  margin: 0;
   accent-color: var(--blue);
 }
 
 .consent-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
   color: #344054;
   font-size: 14px;
+  cursor: pointer;
 }
 
 .consent-label.label-clicked {
