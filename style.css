@@ -242,7 +242,7 @@ main {
 .form-section {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  gap: 24px;
   padding: 22px;
 }
 
@@ -262,7 +262,7 @@ main {
 
 .field {
   display: grid;
-  gap: 7px;
+  gap: 10px;
 }
 
 label,
@@ -284,11 +284,12 @@ output {
   font-weight: 800;
 }
 
-input,
+input:not([type="range"]):not([type="radio"]):not([type="checkbox"]),
 select {
+  display: block;
   width: 100%;
-  min-height: 44px;
-  padding: 10px 12px;
+  min-height: 48px;
+  padding: 12px;
   color: var(--ink);
   background: #fff;
   border: 1px solid #b8c1cf;
