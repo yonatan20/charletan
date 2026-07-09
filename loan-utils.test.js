@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
 import {
   LoanSubmissionError,
@@ -118,5 +119,14 @@ describe("buildLoanApplicationPayload", () => {
         expectedStateShape: "{ applicationSession: { id: string } }",
       });
     }
+  });
+});
+
+describe("consent checkbox markup", () => {
+  it("associates the consent copy with the checkbox using a label", () => {
+    const html = readFileSync(new URL("./index.html", import.meta.url), "utf8");
+
+    expect(html).toContain('<input id="consent" name="consent" type="checkbox" required />');
+    expect(html).toContain('<label for="consent" class="consent-label">');
   });
 });
