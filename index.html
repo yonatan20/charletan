@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to application</a>
     <header class="site-header">
       <div class="top-strip">
         <span>Personal</span>
@@ -21,23 +22,23 @@
             <span class="brand-subname">Bank</span>
           </span>
         </a>
-        <div class="nav-links">
-          <a href="#">Checking</a>
-          <a href="#">Savings & CDs</a>
-          <a href="#">Credit Cards</a>
-          <a href="#">Home Loans</a>
-          <a class="active" href="#">Personal Loans</a>
-          <a href="#">Mortgages</a>
-          <a href="#">Support</a>
-        </div>
-        <div class="secure-note" aria-label="Secure session">
+        <ul class="nav-links">
+          <li><a href="#">Checking</a></li>
+          <li><a href="#">Savings & CDs</a></li>
+          <li><a href="#">Credit Cards</a></li>
+          <li><a href="#">Home Loans</a></li>
+          <li><a class="active" href="#" aria-current="page">Personal Loans</a></li>
+          <li><a href="#">Mortgages</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+        <p class="secure-note">
           <span class="lock-dot"></span>
           Secure session
-        </div>
+        </p>
       </nav>
     </header>
 
-    <main>
+    <main id="main-content">
       <section class="application-shell" aria-labelledby="page-title">
         <div class="intro-panel">
           <p class="eyebrow">Personal loan application</p>
@@ -46,11 +47,13 @@
             Your offer is ready. Review your amount, confirm your information
             and submit your application for a fixed-rate personal loan.
           </p>
-          <div class="progress-track" aria-label="Application progress">
-            <span class="done">Offer</span>
-            <span class="done">Details</span>
-            <span class="current">Submit</span>
-          </div>
+          <nav class="progress-track" aria-label="Application progress">
+            <ol>
+              <li class="done">Offer</li>
+              <li class="done">Details</li>
+              <li class="current" aria-current="step">Submit</li>
+            </ol>
+          </nav>
         </div>
 
         <div class="content-grid">
@@ -94,9 +97,9 @@
                 <p class="hint">Used only to personalize your loan terms.</p>
               </div>
 
-              <div class="field">
-                <span class="field-label">Repayment term</span>
-                <div class="term-options" role="radiogroup" aria-label="Repayment term">
+              <fieldset class="field">
+                <legend>Repayment term</legend>
+                <div class="term-options">
                   <label>
                     <input type="radio" name="loanTerm" value="36" />
                     <span>36 months</span>
@@ -110,7 +113,7 @@
                     <span>60 months</span>
                   </label>
                 </div>
-              </div>
+              </fieldset>
             </section>
 
             <section class="form-section" aria-labelledby="applicant-title">
@@ -159,10 +162,10 @@
 
               <div class="consent-row">
                 <input id="consent" name="consent" type="checkbox" required />
-                <span id="consent-label" class="consent-label">
+                <label id="consent-label" class="consent-label" for="consent">
                   I agree to receive application updates and authorize Charlatan
                   Bank to verify my information.
-                </span>
+                </label>
               </div>
 
               <div class="form-actions">
