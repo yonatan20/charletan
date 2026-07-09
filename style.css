@@ -262,7 +262,7 @@ main {
 
 .field {
   display: grid;
-  gap: 7px;
+  gap: 10px;
 }
 
 label,
@@ -284,8 +284,9 @@ output {
   font-weight: 800;
 }
 
-input,
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 select {
+  display: block;
   width: 100%;
   min-height: 44px;
   padding: 10px 12px;
@@ -294,6 +295,7 @@ select {
   border: 1px solid #b8c1cf;
   border-radius: 4px;
   font: inherit;
+  line-height: 1.5;
 }
 
 input:focus,
