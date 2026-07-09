@@ -137,7 +137,7 @@ import {
 
   consentLabel.addEventListener("click", () => {
     console.warn(
-      "ConsentClickWarning: consent label received click but checkbox state did not change"
+      "ConsentClickWarning: consent label was clicked"
     );
     consentLabel.classList.add("label-clicked");
   });
