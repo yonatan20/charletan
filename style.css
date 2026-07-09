@@ -324,6 +324,7 @@ input[type="range"] {
 }
 
 .term-options label {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -337,13 +338,22 @@ input[type="range"] {
 
 .term-options input {
   position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
   opacity: 0;
-  pointer-events: none;
+  cursor: pointer;
 }
 
 .term-options input:checked + span {
   color: var(--deep-red);
   font-weight: 800;
+}
+
+.term-options label:has(input:focus-visible) {
+  outline: 3px solid rgba(0, 87, 184, 0.2);
+  outline-offset: 2px;
 }
 
 .term-options label:has(input:checked) {
