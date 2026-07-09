@@ -296,6 +296,18 @@ select {
   font: inherit;
 }
 
+/*
+ * Keep text-entry controls comfortably above the WCAG 2.5.8 minimum target
+ * size even if a browser ignores the generic input sizing rule.
+ */
+input:not([type="range"]):not([type="radio"]):not([type="checkbox"]),
+select {
+  display: block;
+  min-block-size: 44px;
+  padding-block: 10px;
+  line-height: 1.4;
+}
+
 input:focus,
 select:focus,
 button:focus {
