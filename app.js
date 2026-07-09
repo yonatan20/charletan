@@ -5,31 +5,32 @@ import {
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
-(function () {
-  const loanAmount = document.querySelector("#loan-amount");
-  const amountOutput = document.querySelector("#loan-amount-output");
-  const summaryAmount = document.querySelector("#summary-amount");
-  const summaryPayment = document.querySelector("#summary-payment");
-  const summaryApr = document.querySelector("#summary-apr");
-  const summaryTerm = document.querySelector("#summary-term");
-  const purpose = document.querySelector("#loan-purpose");
-  const consentLabel = document.querySelector("#consent-label");
-  const form = document.querySelector("#loan-form");
-  const errorBox = document.querySelector("#application-error");
-  const successBox = document.querySelector("#application-success");
-  const readinessCard = document.querySelector("#readiness-card");
+export const initializeLoanApplication = (
+  currentDocument = document,
+  currentWindow = window
+) => {
+  const loanAmount = currentDocument.querySelector("#loan-amount");
+  const amountOutput = currentDocument.querySelector("#loan-amount-output");
+  const summaryAmount = currentDocument.querySelector("#summary-amount");
+  const summaryPayment = currentDocument.querySelector("#summary-payment");
+  const summaryApr = currentDocument.querySelector("#summary-apr");
+  const summaryTerm = currentDocument.querySelector("#summary-term");
+  const purpose = currentDocument.querySelector("#loan-purpose");
+  const consentLabel = currentDocument.querySelector("#consent-label");
+  const form = currentDocument.querySelector("#loan-form");
+  const errorBox = currentDocument.querySelector("#application-error");
+  const successBox = currentDocument.querySelector("#application-success");
+  const readinessCard = currentDocument.querySelector("#readiness-card");
 
   const appState = {
     // Regression: this should be initialized when the application loads.
     applicationSession: undefined,
   };
 
-  let amountChangeCount = 0;
   let submitAttempts = 0;
-  let estimateFrozen = false;
 
   const getSelectedTerm = () => {
-    const checked = document.querySelector('input[name="loanTerm"]:checked');
+    const checked = currentDocument.querySelector('input[name="loanTerm"]:checked');
     return Number(checked?.value || 48);
   };
 
@@ -44,15 +45,16 @@ import {
     summaryApr.textContent = `${apr.toFixed(2)}%`;
     summaryPayment.textContent = formatCurrency(payment);
     summaryTerm.textContent = `${term} months`;
+    readinessCard.classList.remove("is-stale");
   };
 
   const getApplicantDetails = () => ({
-    firstName: document.querySelector("#first-name").value.trim(),
-    lastName: document.querySelector("#last-name").value.trim(),
-    email: document.querySelector("#email").value.trim(),
-    phone: document.querySelector("#phone").value.trim(),
-    employmentStatus: document.querySelector("#employment-status").value,
-    annualIncome: Number(document.querySelector("#annual-income").value || 0),
+    firstName: currentDocument.querySelector("#first-name").value.trim(),
+    lastName: currentDocument.querySelector("#last-name").value.trim(),
+    email: currentDocument.querySelector("#email").value.trim(),
+    phone: currentDocument.querySelector("#phone").value.trim(),
+    employmentStatus: currentDocument.querySelector("#employment-status").value,
+    annualIncome: Number(currentDocument.querySelector("#annual-income").value || 0),
   });
 
   const buildPayload = () =>
@@ -90,32 +92,14 @@ import {
   };
 
   loanAmount.addEventListener("input", () => {
-    amountChangeCount += 1;
-
-    if (amountChangeCount >= 4 && !estimateFrozen) {
-      estimateFrozen = true;
-      console.warn(
-        "LoanEstimateWarning: monthly payment estimate stopped updating after amount change",
-        {
-          selectedAmount: Number(loanAmount.value),
-          amountChangeCount,
-        }
-      );
-      readinessCard.classList.add("is-stale");
-      return;
-    }
-
-    if (!estimateFrozen) {
-      updateSummary();
-    }
+    updateSummary();
 
     logJourneyEvent("loan_amount_changed", {
       selectedAmount: Number(loanAmount.value),
-      estimateFrozen,
     });
   });
 
-  document.querySelectorAll('input[name="loanTerm"]').forEach((termInput) => {
+  currentDocument.querySelectorAll('input[name="loanTerm"]').forEach((termInput) => {
     termInput.addEventListener("change", () => {
       updateSummary();
       logJourneyEvent("loan_term_changed", { term: getSelectedTerm() });
@@ -126,7 +110,7 @@ import {
     logJourneyEvent("loan_purpose_selected", { purpose: purpose.value });
 
     if (purpose.value === "home" || purpose.value === "major") {
-      window.setTimeout(() => {
+      currentWindow.setTimeout(() => {
         console.warn("LoanPurposeWarning: purpose personalization service returned stale state", {
           selectedPurpose: purpose.value,
           impact: "Selection remains valid so applicant can continue to submit",
@@ -176,7 +160,7 @@ import {
         context: error.context,
       });
 
-      window.setTimeout(() => {
+      currentWindow.setTimeout(() => {
         throw error;
       }, 0);
       return;
@@ -204,7 +188,7 @@ import {
       });
   });
 
-  window.addEventListener("unhandledrejection", (event) => {
+  currentWindow.addEventListener("unhandledrejection", (event) => {
     console.error("Unhandled loan submission promise rejection captured", event.reason);
   });
 
@@ -213,4 +197,8 @@ import {
     product: "personal_loan",
     prequalified: true,
   });
-})();
+};
+
+if (typeof document !== "undefined" && typeof window !== "undefined") {
+  initializeLoanApplication();
+}
