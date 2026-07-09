@@ -4,6 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Charlatan Bank | Personal Loan Application</title>
+    <style>
+      .nav-links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+      }
+
+      input,
+      select,
+      button {
+        min-height: 44px;
+      }
+
+      input[type="checkbox"] {
+        inline-size: 24px;
+        block-size: 24px;
+        min-height: 24px;
+      }
+    </style>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -21,15 +40,15 @@
             <span class="brand-subname">Bank</span>
           </span>
         </a>
-        <div class="nav-links">
-          <a href="#">Checking</a>
-          <a href="#">Savings & CDs</a>
-          <a href="#">Credit Cards</a>
-          <a href="#">Home Loans</a>
-          <a class="active" href="#">Personal Loans</a>
-          <a href="#">Mortgages</a>
-          <a href="#">Support</a>
-        </div>
+        <ul class="nav-links" role="list">
+          <li><a href="#">Checking</a></li>
+          <li><a href="#">Savings & CDs</a></li>
+          <li><a href="#">Credit Cards</a></li>
+          <li><a href="#">Home Loans</a></li>
+          <li><a class="active" href="#">Personal Loans</a></li>
+          <li><a href="#">Mortgages</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
         <div class="secure-note" aria-label="Secure session">
           <span class="lock-dot"></span>
           Secure session
@@ -46,11 +65,11 @@
             Your offer is ready. Review your amount, confirm your information
             and submit your application for a fixed-rate personal loan.
           </p>
-          <div class="progress-track" aria-label="Application progress">
-            <span class="done">Offer</span>
-            <span class="done">Details</span>
-            <span class="current">Submit</span>
-          </div>
+          <ol class="progress-track" aria-label="Application progress">
+            <li class="done">Offer</li>
+            <li class="done">Details</li>
+            <li class="current" aria-current="step">Submit</li>
+          </ol>
         </div>
 
         <div class="content-grid">
@@ -159,10 +178,10 @@
 
               <div class="consent-row">
                 <input id="consent" name="consent" type="checkbox" required />
-                <span id="consent-label" class="consent-label">
+                <label id="consent-label" class="consent-label" for="consent">
                   I agree to receive application updates and authorize Charlatan
                   Bank to verify my information.
-                </span>
+                </label>
               </div>
 
               <div class="form-actions">
