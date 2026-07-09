@@ -97,18 +97,18 @@
               <div class="field">
                 <span class="field-label">Repayment term</span>
                 <div class="term-options" role="radiogroup" aria-label="Repayment term">
-                  <label>
-                    <input type="radio" name="loanTerm" value="36" />
-                    <span>36 months</span>
-                  </label>
-                  <label>
-                    <input type="radio" name="loanTerm" value="48" checked />
-                    <span>48 months</span>
-                  </label>
-                  <label>
-                    <input type="radio" name="loanTerm" value="60" />
-                    <span>60 months</span>
-                  </label>
+                  <div class="term-option">
+                    <input id="loan-term-36" class="term-input" type="radio" name="loanTerm" value="36" />
+                    <label class="term-label" for="loan-term-36">36 months</label>
+                  </div>
+                  <div class="term-option">
+                    <input id="loan-term-48" class="term-input" type="radio" name="loanTerm" value="48" checked />
+                    <label class="term-label" for="loan-term-48">48 months</label>
+                  </div>
+                  <div class="term-option">
+                    <input id="loan-term-60" class="term-input" type="radio" name="loanTerm" value="60" />
+                    <label class="term-label" for="loan-term-60">60 months</label>
+                  </div>
                 </div>
               </div>
             </section>

@@ -323,7 +323,12 @@ input[type="range"] {
   gap: 8px;
 }
 
-.term-options label {
+.term-option {
+  position: relative;
+  min-height: 44px;
+}
+
+.term-label {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -335,20 +340,26 @@ input[type="range"] {
   cursor: pointer;
 }
 
-.term-options input {
+.term-input {
   position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
   opacity: 0;
-  pointer-events: none;
+  cursor: pointer;
 }
 
-.term-options input:checked + span {
+.term-input:checked + .term-label {
   color: var(--deep-red);
   font-weight: 800;
-}
-
-.term-options label:has(input:checked) {
   border-color: var(--deep-red);
   background: #fff4f4;
+}
+
+.term-input:focus-visible + .term-label {
+  outline: 3px solid rgba(0, 87, 184, 0.2);
+  outline-offset: 2px;
 }
 
 .consent-row {
