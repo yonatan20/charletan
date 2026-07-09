@@ -136,9 +136,7 @@ import {
   });
 
   consentLabel.addEventListener("click", () => {
-    console.warn(
-      "ConsentClickWarning: consent label received click but checkbox state did not change"
-    );
+    // Keep the existing visual feedback when the consent label is activated.
     consentLabel.classList.add("label-clicked");
   });
 
