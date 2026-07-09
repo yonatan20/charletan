@@ -2,6 +2,7 @@ import {
   formatCurrency,
   getAprForAmount,
   calculatePayment,
+  createApplicationSession,
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
@@ -13,20 +14,17 @@ import {
   const summaryApr = document.querySelector("#summary-apr");
   const summaryTerm = document.querySelector("#summary-term");
   const purpose = document.querySelector("#loan-purpose");
-  const consentLabel = document.querySelector("#consent-label");
   const form = document.querySelector("#loan-form");
   const errorBox = document.querySelector("#application-error");
   const successBox = document.querySelector("#application-success");
   const readinessCard = document.querySelector("#readiness-card");
 
   const appState = {
-    // Regression: this should be initialized when the application loads.
-    applicationSession: undefined,
+    applicationSession: createApplicationSession(),
   };
 
   let amountChangeCount = 0;
   let submitAttempts = 0;
-  let estimateFrozen = false;
 
   const getSelectedTerm = () => {
     const checked = document.querySelector('input[name="loanTerm"]:checked');
@@ -65,13 +63,6 @@ import {
       applicant: getApplicantDetails(),
     });
 
-  const submitLoanApplication = (payload) =>
-    fetch("/api/loan-applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
   const submitLoanApplicationDemoMock = (payload) =>
     Promise.resolve({
       ok: true,
@@ -91,27 +82,12 @@ import {
 
   loanAmount.addEventListener("input", () => {
     amountChangeCount += 1;
-
-    if (amountChangeCount >= 4 && !estimateFrozen) {
-      estimateFrozen = true;
-      console.warn(
-        "LoanEstimateWarning: monthly payment estimate stopped updating after amount change",
-        {
-          selectedAmount: Number(loanAmount.value),
-          amountChangeCount,
-        }
-      );
-      readinessCard.classList.add("is-stale");
-      return;
-    }
-
-    if (!estimateFrozen) {
-      updateSummary();
-    }
+    updateSummary();
+    readinessCard.classList.remove("is-stale");
 
     logJourneyEvent("loan_amount_changed", {
       selectedAmount: Number(loanAmount.value),
-      estimateFrozen,
+      amountChangeCount,
     });
   });
 
@@ -135,13 +111,6 @@ import {
     }
   });
 
-  consentLabel.addEventListener("click", () => {
-    console.warn(
-      "ConsentClickWarning: consent label received click but checkbox state did not change"
-    );
-    consentLabel.classList.add("label-clicked");
-  });
-
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     submitAttempts += 1;
@@ -152,16 +121,8 @@ import {
       return;
     }
 
-    errorBox.hidden = false;
+    errorBox.hidden = true;
     successBox.hidden = true;
-    errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
-
-    console.error("Potential lost conversion", {
-      product: "personal_loan",
-      submitAttempts,
-      requestedAmount: Number(loanAmount.value),
-      businessImpact: "qualified borrower could not submit application",
-    });
 
     let payload;
 
@@ -182,7 +143,7 @@ import {
       return;
     }
 
-    submitLoanApplication(payload)
+    submitLoanApplicationDemoMock(payload)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Submission endpoint returned ${response.status}`);
@@ -196,10 +157,12 @@ import {
         });
       })
       .catch((networkError) => {
+        errorBox.hidden = false;
+        errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
         console.error("LoanApplicationApiError: failed to reach submission endpoint", {
           message: networkError.message,
           endpoint: "/api/loan-applications",
-          suggestedFix: "Use the existing static-demo submission mock or add a real API route.",
+          suggestedFix: "Verify the demo mock or add a real API route before production launch.",
         });
       });
   });
