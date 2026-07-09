@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { describe, it, expect } from "vitest";
 import {
   LoanSubmissionError,
@@ -7,6 +9,9 @@ import {
   createApplicationSession,
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
+
+const fixturePath = (relativePath) =>
+  fileURLToPath(new URL(relativePath, import.meta.url));
 
 describe("formatCurrency", () => {
   it("formats whole-dollar amounts in USD", () => {
@@ -118,5 +123,21 @@ describe("buildLoanApplicationPayload", () => {
         expectedStateShape: "{ applicationSession: { id: string } }",
       });
     }
+  });
+});
+
+describe("consent checkbox markup", () => {
+  it("associates the consent copy with the checkbox using a real label", () => {
+    const html = readFileSync(fixturePath("./index.html"), "utf8");
+
+    expect(html).toContain('<input id="consent" name="consent" type="checkbox" required />');
+    expect(html).toContain('<label id="consent-label" class="consent-label" for="consent">');
+  });
+
+  it("does not keep the broken consent click warning handler", () => {
+    const appSource = readFileSync(fixturePath("./app.js"), "utf8");
+
+    expect(appSource).not.toContain("ConsentClickWarning");
+    expect(appSource).not.toContain('querySelector("#consent-label")');
   });
 });
