@@ -3,6 +3,7 @@ import {
   getAprForAmount,
   calculatePayment,
   buildLoanApplicationPayload,
+  createApplicationSession,
 } from "./loan-utils.js";
 
 (function () {
@@ -20,8 +21,7 @@ import {
   const readinessCard = document.querySelector("#readiness-card");
 
   const appState = {
-    // Regression: this should be initialized when the application loads.
-    applicationSession: undefined,
+    applicationSession: createApplicationSession(),
   };
 
   let amountChangeCount = 0;
@@ -66,13 +66,6 @@ import {
     });
 
   const submitLoanApplication = (payload) =>
-    fetch("/api/loan-applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-  const submitLoanApplicationDemoMock = (payload) =>
     Promise.resolve({
       ok: true,
       status: 201,
@@ -152,9 +145,8 @@ import {
       return;
     }
 
-    errorBox.hidden = false;
+    errorBox.hidden = true;
     successBox.hidden = true;
-    errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
 
     console.error("Potential lost conversion", {
       product: "personal_loan",
@@ -196,10 +188,12 @@ import {
         });
       })
       .catch((networkError) => {
+        errorBox.hidden = false;
+        errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
         console.error("LoanApplicationApiError: failed to reach submission endpoint", {
           message: networkError.message,
-          endpoint: "/api/loan-applications",
-          suggestedFix: "Use the existing static-demo submission mock or add a real API route.",
+          endpoint: "demo-mock",
+          suggestedFix: "Unexpected demo submission failure. Check the in-browser mock.",
         });
       });
   });
