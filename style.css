@@ -372,12 +372,7 @@ input[type="range"] {
 .consent-label {
   color: #344054;
   font-size: 14px;
-}
-
-.consent-label.label-clicked {
-  color: #6b4b00;
-  text-decoration: underline;
-  text-decoration-style: dotted;
+  cursor: pointer;
 }
 
 .form-actions {
