@@ -494,16 +494,6 @@ input[type="range"] {
   border: 1px solid #c8dff8;
 }
 
-.readiness-card.is-stale {
-  background: #fff9e8;
-  border-color: #ecd390;
-}
-
-.readiness-card.is-stale .ready-pill::after {
-  content: " - estimate pending refresh";
-  color: #7a5800;
-}
-
 .ready-pill {
   display: inline-block;
   margin-bottom: 8px;
