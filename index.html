@@ -4,6 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Charlatan Bank | Personal Loan Application</title>
+    <style>
+      .nav-links {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .nav-links li {
+        display: inline-block;
+      }
+
+      .brand,
+      .nav-links a,
+      button,
+      input:not([type="range"]),
+      select {
+        min-height: 44px;
+      }
+
+      .nav-links a {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 12px;
+      }
+
+      #consent {
+        inline-size: 24px;
+        block-size: 24px;
+      }
+    </style>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -21,19 +51,19 @@
             <span class="brand-subname">Bank</span>
           </span>
         </a>
-        <div class="nav-links">
-          <a href="#">Checking</a>
-          <a href="#">Savings & CDs</a>
-          <a href="#">Credit Cards</a>
-          <a href="#">Home Loans</a>
-          <a class="active" href="#">Personal Loans</a>
-          <a href="#">Mortgages</a>
-          <a href="#">Support</a>
-        </div>
-        <div class="secure-note" aria-label="Secure session">
+        <ul class="nav-links">
+          <li><a href="#">Checking</a></li>
+          <li><a href="#">Savings & CDs</a></li>
+          <li><a href="#">Credit Cards</a></li>
+          <li><a href="#">Home Loans</a></li>
+          <li><a class="active" href="#">Personal Loans</a></li>
+          <li><a href="#">Mortgages</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+        <p class="secure-note">
           <span class="lock-dot"></span>
           Secure session
-        </div>
+        </p>
       </nav>
     </header>
 
@@ -157,13 +187,13 @@
                 <h2 id="submit-title">Review and submit</h2>
               </div>
 
-              <div class="consent-row">
+              <label class="consent-row" for="consent">
                 <input id="consent" name="consent" type="checkbox" required />
-                <span id="consent-label" class="consent-label">
+                <span class="consent-copy">
                   I agree to receive application updates and authorize Charlatan
                   Bank to verify my information.
                 </span>
-              </div>
+              </label>
 
               <div class="form-actions">
                 <button id="submit-application" class="primary-button" type="submit">
