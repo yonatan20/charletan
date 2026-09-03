@@ -2,26 +2,26 @@ import {
   formatCurrency,
   getAprForAmount,
   calculatePayment,
+  createApplicationSession,
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
-(function () {
-  const loanAmount = document.querySelector("#loan-amount");
-  const amountOutput = document.querySelector("#loan-amount-output");
-  const summaryAmount = document.querySelector("#summary-amount");
-  const summaryPayment = document.querySelector("#summary-payment");
-  const summaryApr = document.querySelector("#summary-apr");
-  const summaryTerm = document.querySelector("#summary-term");
-  const purpose = document.querySelector("#loan-purpose");
-  const consentLabel = document.querySelector("#consent-label");
-  const form = document.querySelector("#loan-form");
-  const errorBox = document.querySelector("#application-error");
-  const successBox = document.querySelector("#application-success");
-  const readinessCard = document.querySelector("#readiness-card");
+export const initLoanApplication = (root = document) => {
+  const win = root.defaultView ?? window;
+  const loanAmount = root.querySelector("#loan-amount");
+  const amountOutput = root.querySelector("#loan-amount-output");
+  const summaryAmount = root.querySelector("#summary-amount");
+  const summaryPayment = root.querySelector("#summary-payment");
+  const summaryApr = root.querySelector("#summary-apr");
+  const summaryTerm = root.querySelector("#summary-term");
+  const purpose = root.querySelector("#loan-purpose");
+  const form = root.querySelector("#loan-form");
+  const errorBox = root.querySelector("#application-error");
+  const successBox = root.querySelector("#application-success");
+  const readinessCard = root.querySelector("#readiness-card");
 
   const appState = {
-    // Regression: this should be initialized when the application loads.
-    applicationSession: undefined,
+    applicationSession: createApplicationSession(),
   };
 
   let amountChangeCount = 0;
@@ -29,7 +29,7 @@ import {
   let estimateFrozen = false;
 
   const getSelectedTerm = () => {
-    const checked = document.querySelector('input[name="loanTerm"]:checked');
+    const checked = root.querySelector('input[name="loanTerm"]:checked');
     return Number(checked?.value || 48);
   };
 
@@ -47,12 +47,12 @@ import {
   };
 
   const getApplicantDetails = () => ({
-    firstName: document.querySelector("#first-name").value.trim(),
-    lastName: document.querySelector("#last-name").value.trim(),
-    email: document.querySelector("#email").value.trim(),
-    phone: document.querySelector("#phone").value.trim(),
-    employmentStatus: document.querySelector("#employment-status").value,
-    annualIncome: Number(document.querySelector("#annual-income").value || 0),
+    firstName: root.querySelector("#first-name").value.trim(),
+    lastName: root.querySelector("#last-name").value.trim(),
+    email: root.querySelector("#email").value.trim(),
+    phone: root.querySelector("#phone").value.trim(),
+    employmentStatus: root.querySelector("#employment-status").value,
+    annualIncome: Number(root.querySelector("#annual-income").value || 0),
   });
 
   const buildPayload = () =>
@@ -65,13 +65,6 @@ import {
       applicant: getApplicantDetails(),
     });
 
-  const submitLoanApplication = (payload) =>
-    fetch("/api/loan-applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
   const submitLoanApplicationDemoMock = (payload) =>
     Promise.resolve({
       ok: true,
@@ -81,6 +74,8 @@ import {
           confirmationId: "PL-" + payload.applicationSessionId.slice(-8).toUpperCase(),
         }),
     });
+
+  const submitLoanApplication = (payload) => submitLoanApplicationDemoMock(payload);
 
   const logJourneyEvent = (eventName, details = {}) => {
     console.info("[CharlatanLoanJourney]", eventName, {
@@ -115,7 +110,7 @@ import {
     });
   });
 
-  document.querySelectorAll('input[name="loanTerm"]').forEach((termInput) => {
+  root.querySelectorAll('input[name="loanTerm"]').forEach((termInput) => {
     termInput.addEventListener("change", () => {
       updateSummary();
       logJourneyEvent("loan_term_changed", { term: getSelectedTerm() });
@@ -126,20 +121,13 @@ import {
     logJourneyEvent("loan_purpose_selected", { purpose: purpose.value });
 
     if (purpose.value === "home" || purpose.value === "major") {
-      window.setTimeout(() => {
+      win.setTimeout(() => {
         console.warn("LoanPurposeWarning: purpose personalization service returned stale state", {
           selectedPurpose: purpose.value,
           impact: "Selection remains valid so applicant can continue to submit",
         });
       }, 650);
     }
-  });
-
-  consentLabel.addEventListener("click", () => {
-    console.warn(
-      "ConsentClickWarning: consent label received click but checkbox state did not change"
-    );
-    consentLabel.classList.add("label-clicked");
   });
 
   form.addEventListener("submit", (event) => {
@@ -152,15 +140,12 @@ import {
       return;
     }
 
-    errorBox.hidden = false;
+    errorBox.hidden = true;
     successBox.hidden = true;
-    errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
 
-    console.error("Potential lost conversion", {
-      product: "personal_loan",
+    logJourneyEvent("submit_started", {
       submitAttempts,
       requestedAmount: Number(loanAmount.value),
-      businessImpact: "qualified borrower could not submit application",
     });
 
     let payload;
@@ -176,7 +161,7 @@ import {
         context: error.context,
       });
 
-      window.setTimeout(() => {
+      win.setTimeout(() => {
         throw error;
       }, 0);
       return;
@@ -196,15 +181,17 @@ import {
         });
       })
       .catch((networkError) => {
+        errorBox.hidden = false;
+        errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
         console.error("LoanApplicationApiError: failed to reach submission endpoint", {
           message: networkError.message,
-          endpoint: "/api/loan-applications",
-          suggestedFix: "Use the existing static-demo submission mock or add a real API route.",
+          endpoint: "demo-mock",
+          suggestedFix: "Inspect the demo submission mock or wire a real API route.",
         });
       });
   });
 
-  window.addEventListener("unhandledrejection", (event) => {
+  win.addEventListener("unhandledrejection", (event) => {
     console.error("Unhandled loan submission promise rejection captured", event.reason);
   });
 
@@ -213,4 +200,8 @@ import {
     product: "personal_loan",
     prequalified: true,
   });
-})();
+};
+
+if (typeof document !== "undefined") {
+  initLoanApplication(document);
+}
