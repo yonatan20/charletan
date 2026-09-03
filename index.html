@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to application</a>
     <header class="site-header">
       <div class="top-strip">
         <span>Personal</span>
@@ -14,30 +15,31 @@
         <span>Wealth Management</span>
         <span class="top-strip-right">Schedule an appointment now &nbsp; | &nbsp; Help &nbsp; | &nbsp; Search</span>
       </div>
-      <nav class="main-nav" aria-label="Main navigation">
-        <a class="brand" href="#" aria-label="Charlatan Bank home">
+      <nav class="main-nav">
+        <a class="brand" href="#">
           <span class="brand-lockup">
             <span class="brand-name">Charlatan</span>
             <span class="brand-subname">Bank</span>
           </span>
+          <span class="sr-only"> home</span>
         </a>
-        <div class="nav-links">
-          <a href="#">Checking</a>
-          <a href="#">Savings & CDs</a>
-          <a href="#">Credit Cards</a>
-          <a href="#">Home Loans</a>
-          <a class="active" href="#">Personal Loans</a>
-          <a href="#">Mortgages</a>
-          <a href="#">Support</a>
-        </div>
-        <div class="secure-note" aria-label="Secure session">
+        <ul class="nav-links">
+          <li><a href="#">Checking</a></li>
+          <li><a href="#">Savings & CDs</a></li>
+          <li><a href="#">Credit Cards</a></li>
+          <li><a href="#">Home Loans</a></li>
+          <li><a class="active" href="#" aria-current="page">Personal Loans</a></li>
+          <li><a href="#">Mortgages</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+        <div class="secure-note">
           <span class="lock-dot"></span>
           Secure session
         </div>
       </nav>
     </header>
 
-    <main>
+    <main id="main-content">
       <section class="application-shell" aria-labelledby="page-title">
         <div class="intro-panel">
           <p class="eyebrow">Personal loan application</p>
@@ -46,11 +48,11 @@
             Your offer is ready. Review your amount, confirm your information
             and submit your application for a fixed-rate personal loan.
           </p>
-          <div class="progress-track" aria-label="Application progress">
-            <span class="done">Offer</span>
-            <span class="done">Details</span>
-            <span class="current">Submit</span>
-          </div>
+          <ol class="progress-track" aria-label="Application progress">
+            <li class="done">Offer</li>
+            <li class="done">Details</li>
+            <li class="current" aria-current="step">Submit</li>
+          </ol>
         </div>
 
         <div class="content-grid">
@@ -94,23 +96,23 @@
                 <p class="hint">Used only to personalize your loan terms.</p>
               </div>
 
-              <div class="field">
-                <span class="field-label">Repayment term</span>
-                <div class="term-options" role="radiogroup" aria-label="Repayment term">
-                  <label>
+              <fieldset class="field term-fieldset">
+                <legend>Repayment term</legend>
+                <div class="term-options">
+                  <label class="term-option">
                     <input type="radio" name="loanTerm" value="36" />
                     <span>36 months</span>
                   </label>
-                  <label>
+                  <label class="term-option">
                     <input type="radio" name="loanTerm" value="48" checked />
                     <span>48 months</span>
                   </label>
-                  <label>
+                  <label class="term-option">
                     <input type="radio" name="loanTerm" value="60" />
                     <span>60 months</span>
                   </label>
                 </div>
-              </div>
+              </fieldset>
             </section>
 
             <section class="form-section" aria-labelledby="applicant-title">
@@ -159,10 +161,10 @@
 
               <div class="consent-row">
                 <input id="consent" name="consent" type="checkbox" required />
-                <span id="consent-label" class="consent-label">
+                <label id="consent-label" class="consent-label" for="consent">
                   I agree to receive application updates and authorize Charlatan
                   Bank to verify my information.
-                </span>
+                </label>
               </div>
 
               <div class="form-actions">
