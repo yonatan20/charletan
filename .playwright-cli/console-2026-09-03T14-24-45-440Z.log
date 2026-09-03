@@ -1,0 +1,4 @@
+[      36ms] [INFO] [CharlatanLoanJourney] application_loaded {timestamp: 2026-09-03T14:24:45.475Z, product: personal_loan, prequalified: true} @ http://127.0.0.1:8000/app.js:81
+[      45ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://127.0.0.1:8000/favicon.ico:0
+[    2245ms] [INFO] [CharlatanLoanJourney] loan_purpose_selected {timestamp: 2026-09-03T14:24:47.684Z, purpose: debt} @ http://127.0.0.1:8000/app.js:81
+[    2339ms] [INFO] [CharlatanLoanJourney] application_submitted {timestamp: 2026-09-03T14:24:47.779Z, submitAttempts: 1, applicationSessionId: loan-session-mtlm9kf0, confirmationId: PL-MTLM9KF0} @ http://127.0.0.1:8000/app.js:81

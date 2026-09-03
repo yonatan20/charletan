@@ -1,0 +1,145 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: Personal
+      - generic [ref=e5]: Small Business
+      - generic [ref=e6]: Wealth Management
+      - generic [ref=e7]: Schedule an appointment now | Help | Search
+    - navigation "Main navigation" [ref=e8]:
+      - link "Charlatan Bank home" [ref=e9] [cursor=pointer]:
+        - /url: "#"
+        - generic [ref=e10]:
+          - generic [ref=e11]: Charlatan
+          - generic [ref=e12]: Bank
+      - generic [ref=e13]:
+        - link "Checking" [ref=e14] [cursor=pointer]:
+          - /url: "#"
+        - link "Savings & CDs" [ref=e15] [cursor=pointer]:
+          - /url: "#"
+        - link "Credit Cards" [ref=e16] [cursor=pointer]:
+          - /url: "#"
+        - link "Home Loans" [ref=e17] [cursor=pointer]:
+          - /url: "#"
+        - link "Personal Loans" [ref=e18] [cursor=pointer]:
+          - /url: "#"
+        - link "Mortgages" [ref=e19] [cursor=pointer]:
+          - /url: "#"
+        - link "Support" [ref=e20] [cursor=pointer]:
+          - /url: "#"
+      - generic "Secure session" [ref=e21]
+  - main [ref=e23]:
+    - region [ref=e24]:
+      - generic [ref=e25]:
+        - paragraph [ref=e26]: Personal loan application
+        - heading "Finish your Charlatan personal loan application" [level=1] [ref=e27]
+        - paragraph [ref=e28]: Your offer is ready. Review your amount, confirm your information and submit your application for a fixed-rate personal loan.
+        - generic "Application progress" [ref=e29]:
+          - generic [ref=e30]: Offer
+          - generic [ref=e31]: Details
+          - generic [ref=e32]: Submit
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - region [ref=e35]:
+            - generic [ref=e36]:
+              - paragraph [ref=e37]: Step 1 of 3
+              - heading "Loan details" [level=2] [ref=e38]
+            - generic [ref=e39]:
+              - generic [ref=e40]:
+                - generic [ref=e41]: Loan amount
+                - status [ref=e42]: $32,500
+              - slider "Loan amount" [ref=e43]: "32500"
+              - generic [aria-hidden] [ref=e44]:
+                - generic [ref=e45]: $5,000
+                - generic [ref=e46]: $75,000
+            - generic [ref=e47]:
+              - generic [ref=e48]: Loan purpose
+              - combobox "Loan purpose" [ref=e49]:
+                - option "Choose a purpose" [selected]
+                - option "Debt consolidation"
+                - option "Home improvement"
+                - option "Medical expense"
+                - option "Major purchase"
+                - option "Other personal expense"
+              - paragraph [ref=e50]: Used only to personalize your loan terms.
+            - generic [ref=e51]:
+              - generic [ref=e52]: Repayment term
+              - radiogroup "Repayment term" [ref=e53]:
+                - generic [ref=e54] [cursor=pointer]:
+                  - radio "36 months"
+                  - generic [ref=e55]: 36 months
+                - generic [ref=e56] [cursor=pointer]:
+                  - radio "48 months" [checked]
+                  - generic [ref=e57]: 48 months
+                - generic [ref=e58] [cursor=pointer]:
+                  - radio "60 months"
+                  - generic [ref=e59]: 60 months
+          - region [ref=e60]:
+            - generic [ref=e61]:
+              - paragraph [ref=e62]: Step 2 of 3
+              - heading "Applicant details" [level=2] [ref=e63]
+            - generic [ref=e64]:
+              - generic [ref=e65]: First name
+              - textbox "First name" [ref=e66]
+            - generic [ref=e67]:
+              - generic [ref=e68]: Last name
+              - textbox "Last name" [ref=e69]
+            - generic [ref=e70]:
+              - generic [ref=e71]: Email address
+              - textbox "Email address" [ref=e72]
+            - generic [ref=e73]:
+              - generic [ref=e74]: Mobile phone
+              - textbox "Mobile phone" [ref=e75]:
+                - /placeholder: (555) 123-4567
+            - generic [ref=e76]:
+              - generic [ref=e77]: Employment status
+              - combobox "Employment status" [ref=e78]:
+                - option "Select status" [selected]
+                - option "Employed full time"
+                - option "Self-employed"
+                - option "Retired"
+                - option "Student"
+            - generic [ref=e79]:
+              - generic [ref=e80]: Annual income
+              - spinbutton "Annual income" [ref=e81]
+          - region [ref=e82]:
+            - generic [ref=e83]:
+              - paragraph [ref=e84]: Step 3 of 3
+              - heading "Review and submit" [level=2] [ref=e85]
+            - generic [ref=e86]:
+              - checkbox [ref=e87]
+              - generic [ref=e88]: I agree to receive application updates and authorize Charlatan Bank to verify my information.
+            - generic [ref=e89]:
+              - button "Submit application" [ref=e90] [cursor=pointer]
+              - paragraph [ref=e91]: Most applicants receive a decision in less than 60 seconds.
+          - region [ref=e92]:
+            - heading "Important information and disclosures" [level=2] [ref=e93]
+            - paragraph [ref=e94]: Charlatan Bank is a fictional financial institution used for demonstration purposes. Loan offers, rates, payments, terms and approval messages shown on this page are sample content and do not represent a real extension of credit.
+            - paragraph [ref=e95]: Final eligibility would depend on verification of identity, income, employment, credit history and other underwriting criteria. Submitting an application may require additional documentation, and approval is not guaranteed.
+            - paragraph [ref=e96]: Estimated monthly payments are for illustration only and may not include taxes, fees, insurance, late charges or other amounts that could apply to an actual loan account.
+            - paragraph [ref=e97]: By continuing, applicants acknowledge that electronic records, notices and communications may be used during the application process. This sample page does not collect, store or transmit real banking information.
+        - complementary "Loan summary" [ref=e98]:
+          - generic [ref=e99]:
+            - paragraph [ref=e100]: Your estimated offer
+            - generic [ref=e101]: Prequalified
+            - generic [ref=e103]:
+              - generic [ref=e104]:
+                - term [ref=e105]: Loan amount
+                - definition [ref=e106]: $32,500
+              - generic [ref=e107]:
+                - term [ref=e108]: Estimated APR
+                - definition [ref=e109]: 8.74%
+              - generic [ref=e110]:
+                - term [ref=e111]: Monthly payment
+                - definition [ref=e112]: $805
+              - generic [ref=e113]:
+                - term [ref=e114]: Term
+                - definition [ref=e115]: 48 months
+            - generic [ref=e116]:
+              - generic [ref=e117]: Application ready
+              - paragraph [ref=e118]: Your selected offer is available today, subject to final review.
+            - generic [ref=e119]:
+              - paragraph [ref=e120]: Need help?
+              - paragraph [ref=e121]: Loan specialists are available until 9 PM ET.
+  - contentinfo [ref=e122]:
+    - generic [ref=e123]: Charlatan Bank is a fictional demo brand.
+    - generic [ref=e124]: Member FDIC-style sample page for hackathon testing.
