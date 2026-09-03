@@ -26,6 +26,12 @@ export const createApplicationSession = () => ({
   createdAt: new Date().toISOString(),
 });
 
+export const createInitialApplicationState = (
+  createSession = createApplicationSession
+) => ({
+  applicationSession: createSession(),
+});
+
 export const buildLoanApplicationPayload = ({
   applicationSession,
   amount,
@@ -52,3 +58,13 @@ export const buildLoanApplicationPayload = ({
     applicant,
   };
 };
+
+export const submitStaticLoanApplication = (payload) =>
+  Promise.resolve({
+    ok: true,
+    status: 201,
+    json: () =>
+      Promise.resolve({
+        confirmationId: "PL-" + payload.applicationSessionId.slice(-8).toUpperCase(),
+      }),
+  });
