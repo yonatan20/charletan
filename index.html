@@ -54,7 +54,7 @@
         </div>
 
         <div class="content-grid">
-          <form class="loan-form" id="loan-form" novalidate>
+          <form class="loan-form" id="loan-form" data-submission-mode="demo" novalidate>
             <section class="form-section" aria-labelledby="loan-details-title">
               <div class="section-heading">
                 <p class="step-label">Step 1 of 3</p>
@@ -159,10 +159,10 @@
 
               <div class="consent-row">
                 <input id="consent" name="consent" type="checkbox" required />
-                <span id="consent-label" class="consent-label">
+                <label id="consent-label" class="consent-label" for="consent">
                   I agree to receive application updates and authorize Charlatan
                   Bank to verify my information.
-                </span>
+                </label>
               </div>
 
               <div class="form-actions">
