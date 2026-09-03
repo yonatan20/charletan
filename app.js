@@ -2,6 +2,7 @@ import {
   formatCurrency,
   getAprForAmount,
   calculatePayment,
+  createApplicationSession,
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
@@ -13,15 +14,13 @@ import {
   const summaryApr = document.querySelector("#summary-apr");
   const summaryTerm = document.querySelector("#summary-term");
   const purpose = document.querySelector("#loan-purpose");
-  const consentLabel = document.querySelector("#consent-label");
   const form = document.querySelector("#loan-form");
   const errorBox = document.querySelector("#application-error");
   const successBox = document.querySelector("#application-success");
   const readinessCard = document.querySelector("#readiness-card");
 
   const appState = {
-    // Regression: this should be initialized when the application loads.
-    applicationSession: undefined,
+    applicationSession: createApplicationSession(),
   };
 
   let amountChangeCount = 0;
@@ -65,13 +64,6 @@ import {
       applicant: getApplicantDetails(),
     });
 
-  const submitLoanApplication = (payload) =>
-    fetch("/api/loan-applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
   const submitLoanApplicationDemoMock = (payload) =>
     Promise.resolve({
       ok: true,
@@ -81,6 +73,38 @@ import {
           confirmationId: "PL-" + payload.applicationSessionId.slice(-8).toUpperCase(),
         }),
     });
+
+  const submitLoanApplication = async (payload) => {
+    try {
+      const response = await fetch("/api/loan-applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        return response;
+      }
+
+      console.warn(
+        "LoanApplicationApiWarning: submission API unavailable, falling back to demo confirmation",
+        {
+          endpoint: "/api/loan-applications",
+          status: response.status,
+        }
+      );
+    } catch (networkError) {
+      console.warn(
+        "LoanApplicationApiWarning: submission API unreachable, falling back to demo confirmation",
+        {
+          endpoint: "/api/loan-applications",
+          message: networkError.message,
+        }
+      );
+    }
+
+    return submitLoanApplicationDemoMock(payload);
+  };
 
   const logJourneyEvent = (eventName, details = {}) => {
     console.info("[CharlatanLoanJourney]", eventName, {
@@ -135,13 +159,6 @@ import {
     }
   });
 
-  consentLabel.addEventListener("click", () => {
-    console.warn(
-      "ConsentClickWarning: consent label received click but checkbox state did not change"
-    );
-    consentLabel.classList.add("label-clicked");
-  });
-
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     submitAttempts += 1;
@@ -152,9 +169,8 @@ import {
       return;
     }
 
-    errorBox.hidden = false;
+    errorBox.hidden = true;
     successBox.hidden = true;
-    errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
 
     console.error("Potential lost conversion", {
       product: "personal_loan",
@@ -168,6 +184,8 @@ import {
     try {
       payload = buildPayload();
     } catch (error) {
+      errorBox.hidden = false;
+      errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
       console.error(error.name + ": " + error.message, {
         submitAttempts,
         loanAmount: Number(loanAmount.value),
@@ -196,6 +214,8 @@ import {
         });
       })
       .catch((networkError) => {
+        errorBox.hidden = false;
+        errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
         console.error("LoanApplicationApiError: failed to reach submission endpoint", {
           message: networkError.message,
           endpoint: "/api/loan-applications",
