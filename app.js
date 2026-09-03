@@ -2,7 +2,9 @@ import {
   formatCurrency,
   getAprForAmount,
   calculatePayment,
+  createInitialApplicationState,
   buildLoanApplicationPayload,
+  submitStaticLoanApplication,
 } from "./loan-utils.js";
 
 (function () {
@@ -19,10 +21,7 @@ import {
   const successBox = document.querySelector("#application-success");
   const readinessCard = document.querySelector("#readiness-card");
 
-  const appState = {
-    // Regression: this should be initialized when the application loads.
-    applicationSession: undefined,
-  };
+  const appState = createInitialApplicationState();
 
   let amountChangeCount = 0;
   let submitAttempts = 0;
@@ -63,23 +62,6 @@ import {
       term: getSelectedTerm(),
       estimatedMonthlyPayment: summaryPayment.textContent,
       applicant: getApplicantDetails(),
-    });
-
-  const submitLoanApplication = (payload) =>
-    fetch("/api/loan-applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-  const submitLoanApplicationDemoMock = (payload) =>
-    Promise.resolve({
-      ok: true,
-      status: 201,
-      json: () =>
-        Promise.resolve({
-          confirmationId: "PL-" + payload.applicationSessionId.slice(-8).toUpperCase(),
-        }),
     });
 
   const logJourneyEvent = (eventName, details = {}) => {
@@ -182,7 +164,7 @@ import {
       return;
     }
 
-    submitLoanApplication(payload)
+    submitStaticLoanApplication(payload)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Submission endpoint returned ${response.status}`);
@@ -196,10 +178,9 @@ import {
         });
       })
       .catch((networkError) => {
-        console.error("LoanApplicationApiError: failed to reach submission endpoint", {
+        console.error("LoanApplicationSubmissionError: static demo submission failed", {
           message: networkError.message,
-          endpoint: "/api/loan-applications",
-          suggestedFix: "Use the existing static-demo submission mock or add a real API route.",
+          suggestedFix: "Check the static demo submission helper in loan-utils.js.",
         });
       });
   });

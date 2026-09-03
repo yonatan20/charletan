@@ -5,7 +5,9 @@ import {
   getAprForAmount,
   calculatePayment,
   createApplicationSession,
+  createInitialApplicationState,
   buildLoanApplicationPayload,
+  submitStaticLoanApplication,
 } from "./loan-utils.js";
 
 describe("formatCurrency", () => {
@@ -55,6 +57,19 @@ describe("createApplicationSession", () => {
     expect(session.id).toMatch(/^loan-session-[a-z0-9]+$/);
     expect(() => new Date(session.createdAt)).not.toThrow();
     expect(new Date(session.createdAt).toISOString()).toBe(session.createdAt);
+  });
+});
+
+describe("createInitialApplicationState", () => {
+  it("initializes app state with a fresh application session", () => {
+    const stubSession = {
+      id: "loan-session-test123",
+      createdAt: "2026-01-01T00:00:00.000Z",
+    };
+
+    expect(createInitialApplicationState(() => stubSession)).toEqual({
+      applicationSession: stubSession,
+    });
   });
 });
 
@@ -118,5 +133,19 @@ describe("buildLoanApplicationPayload", () => {
         expectedStateShape: "{ applicationSession: { id: string } }",
       });
     }
+  });
+});
+
+describe("submitStaticLoanApplication", () => {
+  it("returns a successful confirmation for the static demo flow", async () => {
+    const response = await submitStaticLoanApplication({
+      applicationSessionId: "loan-session-abc12345",
+    });
+
+    expect(response.ok).toBe(true);
+    expect(response.status).toBe(201);
+    await expect(response.json()).resolves.toEqual({
+      confirmationId: "PL-ABC12345",
+    });
   });
 });
