@@ -2,6 +2,7 @@ import {
   formatCurrency,
   getAprForAmount,
   calculatePayment,
+  createApplicationSession,
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
@@ -18,10 +19,10 @@ import {
   const errorBox = document.querySelector("#application-error");
   const successBox = document.querySelector("#application-success");
   const readinessCard = document.querySelector("#readiness-card");
+  const submitButton = document.querySelector("#submit-application");
 
   const appState = {
-    // Regression: this should be initialized when the application loads.
-    applicationSession: undefined,
+    applicationSession: createApplicationSession(),
   };
 
   let amountChangeCount = 0;
@@ -65,13 +66,6 @@ import {
       applicant: getApplicantDetails(),
     });
 
-  const submitLoanApplication = (payload) =>
-    fetch("/api/loan-applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
   const submitLoanApplicationDemoMock = (payload) =>
     Promise.resolve({
       ok: true,
@@ -81,6 +75,8 @@ import {
           confirmationId: "PL-" + payload.applicationSessionId.slice(-8).toUpperCase(),
         }),
     });
+
+  const submitLoanApplication = (payload) => submitLoanApplicationDemoMock(payload);
 
   const logJourneyEvent = (eventName, details = {}) => {
     console.info("[CharlatanLoanJourney]", eventName, {
@@ -152,16 +148,10 @@ import {
       return;
     }
 
-    errorBox.hidden = false;
+    errorBox.hidden = true;
     successBox.hidden = true;
-    errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
-
-    console.error("Potential lost conversion", {
-      product: "personal_loan",
-      submitAttempts,
-      requestedAmount: Number(loanAmount.value),
-      businessImpact: "qualified borrower could not submit application",
-    });
+    submitButton.disabled = true;
+    submitButton.textContent = "Submitting...";
 
     let payload;
 
@@ -176,31 +166,44 @@ import {
         context: error.context,
       });
 
-      window.setTimeout(() => {
-        throw error;
-      }, 0);
+      errorBox.hidden = false;
+      errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      submitButton.disabled = false;
+      submitButton.textContent = "Submit application";
       return;
     }
 
     submitLoanApplication(payload)
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok) {
           throw new Error(`Submission endpoint returned ${response.status}`);
         }
 
+        const responseBody = await response.json().catch(() => null);
+
         errorBox.hidden = true;
         successBox.hidden = false;
+        successBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        appState.applicationSession = createApplicationSession();
         logJourneyEvent("application_submitted", {
           submitAttempts,
           applicationSessionId: payload.applicationSessionId,
+          confirmationId: responseBody?.confirmationId ?? null,
         });
       })
       .catch((networkError) => {
+        errorBox.hidden = false;
+        successBox.hidden = true;
+        errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
         console.error("LoanApplicationApiError: failed to reach submission endpoint", {
           message: networkError.message,
-          endpoint: "/api/loan-applications",
-          suggestedFix: "Use the existing static-demo submission mock or add a real API route.",
+          endpoint: "demo-mock",
+          suggestedFix: "Keep the built-in demo mock wired in unless a real backend is added to this repo.",
         });
+      })
+      .finally(() => {
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit application";
       });
   });
 
