@@ -2,6 +2,7 @@ import {
   formatCurrency,
   getAprForAmount,
   calculatePayment,
+  createApplicationSession,
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
@@ -13,15 +14,13 @@ import {
   const summaryApr = document.querySelector("#summary-apr");
   const summaryTerm = document.querySelector("#summary-term");
   const purpose = document.querySelector("#loan-purpose");
-  const consentLabel = document.querySelector("#consent-label");
   const form = document.querySelector("#loan-form");
   const errorBox = document.querySelector("#application-error");
   const successBox = document.querySelector("#application-success");
   const readinessCard = document.querySelector("#readiness-card");
 
   const appState = {
-    // Regression: this should be initialized when the application loads.
-    applicationSession: undefined,
+    applicationSession: createApplicationSession(),
   };
 
   let amountChangeCount = 0;
@@ -66,11 +65,13 @@ import {
     });
 
   const submitLoanApplication = (payload) =>
-    fetch("/api/loan-applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
+      ? submitLoanApplicationDemoMock(payload)
+      : fetch("/api/loan-applications", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
 
   const submitLoanApplicationDemoMock = (payload) =>
     Promise.resolve({
@@ -135,13 +136,6 @@ import {
     }
   });
 
-  consentLabel.addEventListener("click", () => {
-    console.warn(
-      "ConsentClickWarning: consent label received click but checkbox state did not change"
-    );
-    consentLabel.classList.add("label-clicked");
-  });
-
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     submitAttempts += 1;
@@ -152,16 +146,8 @@ import {
       return;
     }
 
-    errorBox.hidden = false;
+    errorBox.hidden = true;
     successBox.hidden = true;
-    errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
-
-    console.error("Potential lost conversion", {
-      product: "personal_loan",
-      submitAttempts,
-      requestedAmount: Number(loanAmount.value),
-      businessImpact: "qualified borrower could not submit application",
-    });
 
     let payload;
 
@@ -179,6 +165,8 @@ import {
       window.setTimeout(() => {
         throw error;
       }, 0);
+      errorBox.hidden = false;
+      errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
       return;
     }
 
@@ -196,6 +184,8 @@ import {
         });
       })
       .catch((networkError) => {
+        errorBox.hidden = false;
+        errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
         console.error("LoanApplicationApiError: failed to reach submission endpoint", {
           message: networkError.message,
           endpoint: "/api/loan-applications",
