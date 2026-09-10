@@ -14,6 +14,7 @@ import {
   const summaryTerm = document.querySelector("#summary-term");
   const purpose = document.querySelector("#loan-purpose");
   const consentLabel = document.querySelector("#consent-label");
+  const consentCheckbox = document.querySelector("#consent");
   const form = document.querySelector("#loan-form");
   const errorBox = document.querySelector("#application-error");
   const successBox = document.querySelector("#application-success");
@@ -135,12 +136,12 @@ import {
     }
   });
 
-  consentLabel.addEventListener("click", () => {
-    console.warn(
-      "ConsentClickWarning: consent label received click but checkbox state did not change"
-    );
+  const markConsentLabelInteraction = () => {
     consentLabel.classList.add("label-clicked");
-  });
+  };
+
+  consentLabel.addEventListener("click", markConsentLabelInteraction);
+  consentCheckbox.addEventListener("change", markConsentLabelInteraction);
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
