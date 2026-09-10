@@ -2,6 +2,7 @@ import {
   formatCurrency,
   getAprForAmount,
   calculatePayment,
+  createApplicationSession,
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
@@ -13,15 +14,26 @@ import {
   const summaryApr = document.querySelector("#summary-apr");
   const summaryTerm = document.querySelector("#summary-term");
   const purpose = document.querySelector("#loan-purpose");
-  const consentLabel = document.querySelector("#consent-label");
   const form = document.querySelector("#loan-form");
+  const submitButton = document.querySelector("#submit-application");
   const errorBox = document.querySelector("#application-error");
   const successBox = document.querySelector("#application-success");
   const readinessCard = document.querySelector("#readiness-card");
+  const defaultSubmitButtonText = submitButton.textContent.trim();
+
+  const getSubmissionEndpoint = () => {
+    const configuredEndpoint = window.CHARLATAN_LOAN_API_BASE_URL;
+
+    if (typeof configuredEndpoint !== "string" || configuredEndpoint.trim() === "") {
+      return null;
+    }
+
+    return new URL(configuredEndpoint.trim(), window.location.href).toString();
+  };
 
   const appState = {
-    // Regression: this should be initialized when the application loads.
-    applicationSession: undefined,
+    applicationSession: createApplicationSession(),
+    submissionEndpoint: getSubmissionEndpoint(),
   };
 
   let amountChangeCount = 0;
@@ -65,13 +77,6 @@ import {
       applicant: getApplicantDetails(),
     });
 
-  const submitLoanApplication = (payload) =>
-    fetch("/api/loan-applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
   const submitLoanApplicationDemoMock = (payload) =>
     Promise.resolve({
       ok: true,
@@ -81,6 +86,35 @@ import {
           confirmationId: "PL-" + payload.applicationSessionId.slice(-8).toUpperCase(),
         }),
     });
+
+  const submitLoanApplication = (payload) => {
+    if (!appState.submissionEndpoint) {
+      return submitLoanApplicationDemoMock(payload);
+    }
+
+    return fetch(appState.submissionEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  };
+
+  const setSubmitButtonState = (state) => {
+    if (state === "submitting") {
+      submitButton.disabled = true;
+      submitButton.textContent = "Submitting...";
+      return;
+    }
+
+    if (state === "success") {
+      submitButton.disabled = true;
+      submitButton.textContent = "Application submitted";
+      return;
+    }
+
+    submitButton.disabled = false;
+    submitButton.textContent = defaultSubmitButtonText;
+  };
 
   const logJourneyEvent = (eventName, details = {}) => {
     console.info("[CharlatanLoanJourney]", eventName, {
@@ -135,13 +169,6 @@ import {
     }
   });
 
-  consentLabel.addEventListener("click", () => {
-    console.warn(
-      "ConsentClickWarning: consent label received click but checkbox state did not change"
-    );
-    consentLabel.classList.add("label-clicked");
-  });
-
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     submitAttempts += 1;
@@ -152,15 +179,14 @@ import {
       return;
     }
 
-    errorBox.hidden = false;
+    errorBox.hidden = true;
     successBox.hidden = true;
-    errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    setSubmitButtonState("submitting");
 
-    console.error("Potential lost conversion", {
+    logJourneyEvent("application_submit_started", {
       product: "personal_loan",
       submitAttempts,
       requestedAmount: Number(loanAmount.value),
-      businessImpact: "qualified borrower could not submit application",
     });
 
     let payload;
@@ -168,6 +194,9 @@ import {
     try {
       payload = buildPayload();
     } catch (error) {
+      setSubmitButtonState("idle");
+      errorBox.hidden = false;
+      errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
       console.error(error.name + ": " + error.message, {
         submitAttempts,
         loanAmount: Number(loanAmount.value),
@@ -190,16 +219,21 @@ import {
 
         errorBox.hidden = true;
         successBox.hidden = false;
+        setSubmitButtonState("success");
         logJourneyEvent("application_submitted", {
           submitAttempts,
           applicationSessionId: payload.applicationSessionId,
         });
       })
       .catch((networkError) => {
+        setSubmitButtonState("idle");
+        errorBox.hidden = false;
+        successBox.hidden = true;
+        errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
         console.error("LoanApplicationApiError: failed to reach submission endpoint", {
           message: networkError.message,
-          endpoint: "/api/loan-applications",
-          suggestedFix: "Use the existing static-demo submission mock or add a real API route.",
+          endpoint: appState.submissionEndpoint || "demo-mock",
+          suggestedFix: "Set window.CHARLATAN_LOAN_API_BASE_URL to a real endpoint when wiring up a backend.",
         });
       });
   });
@@ -212,5 +246,6 @@ import {
   logJourneyEvent("application_loaded", {
     product: "personal_loan",
     prequalified: true,
+    submissionMode: appState.submissionEndpoint ? "api" : "demo",
   });
 })();
