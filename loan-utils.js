@@ -26,6 +26,10 @@ export const createApplicationSession = () => ({
   createdAt: new Date().toISOString(),
 });
 
+export const createInitialAppState = () => ({
+  applicationSession: createApplicationSession(),
+});
+
 export const buildLoanApplicationPayload = ({
   applicationSession,
   amount,

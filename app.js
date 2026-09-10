@@ -2,6 +2,7 @@ import {
   formatCurrency,
   getAprForAmount,
   calculatePayment,
+  createInitialAppState,
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
@@ -19,10 +20,7 @@ import {
   const successBox = document.querySelector("#application-success");
   const readinessCard = document.querySelector("#readiness-card");
 
-  const appState = {
-    // Regression: this should be initialized when the application loads.
-    applicationSession: undefined,
-  };
+  const appState = createInitialAppState();
 
   let amountChangeCount = 0;
   let submitAttempts = 0;
