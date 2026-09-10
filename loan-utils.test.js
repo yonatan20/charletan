@@ -5,7 +5,9 @@ import {
   getAprForAmount,
   calculatePayment,
   createApplicationSession,
+  createInitialAppState,
   buildLoanApplicationPayload,
+  shouldUseDemoSubmission,
 } from "./loan-utils.js";
 
 describe("formatCurrency", () => {
@@ -55,6 +57,33 @@ describe("createApplicationSession", () => {
     expect(session.id).toMatch(/^loan-session-[a-z0-9]+$/);
     expect(() => new Date(session.createdAt)).not.toThrow();
     expect(new Date(session.createdAt).toISOString()).toBe(session.createdAt);
+  });
+});
+
+describe("createInitialAppState", () => {
+  it("initializes application state with a session id", () => {
+    const appState = createInitialAppState();
+
+    expect(appState).toEqual({
+      applicationSession: expect.objectContaining({
+        id: expect.stringMatching(/^loan-session-[a-z0-9]+$/),
+        createdAt: expect.any(String),
+      }),
+    });
+  });
+});
+
+describe("shouldUseDemoSubmission", () => {
+  it("uses the demo submission path for local preview environments", () => {
+    expect(shouldUseDemoSubmission({ protocol: "file:", hostname: "" })).toBe(true);
+    expect(shouldUseDemoSubmission({ protocol: "http:", hostname: "127.0.0.1" })).toBe(true);
+    expect(shouldUseDemoSubmission({ protocol: "http:", hostname: "localhost" })).toBe(true);
+  });
+
+  it("uses the real submission path for non-local hosts", () => {
+    expect(shouldUseDemoSubmission({ protocol: "https:", hostname: "app.example.com" })).toBe(
+      false
+    );
   });
 });
 
