@@ -26,6 +26,17 @@ export const createApplicationSession = () => ({
   createdAt: new Date().toISOString(),
 });
 
+export const createInitialAppState = () => ({
+  applicationSession: createApplicationSession(),
+});
+
+export const shouldUseDemoSubmission = (locationLike) => {
+  const protocol = locationLike?.protocol || "";
+  const hostname = locationLike?.hostname || "";
+
+  return protocol === "file:" || hostname === "127.0.0.1" || hostname === "localhost";
+};
+
 export const buildLoanApplicationPayload = ({
   applicationSession,
   amount,
