@@ -5,6 +5,7 @@ import {
   getAprForAmount,
   calculatePayment,
   createApplicationSession,
+  createInitialAppState,
   buildLoanApplicationPayload,
 } from "./loan-utils.js";
 
@@ -55,6 +56,19 @@ describe("createApplicationSession", () => {
     expect(session.id).toMatch(/^loan-session-[a-z0-9]+$/);
     expect(() => new Date(session.createdAt)).not.toThrow();
     expect(new Date(session.createdAt).toISOString()).toBe(session.createdAt);
+  });
+});
+
+describe("createInitialAppState", () => {
+  it("initializes the application session used by the submit flow", () => {
+    const appState = createInitialAppState();
+
+    expect(appState).toEqual({
+      applicationSession: expect.objectContaining({
+        id: expect.stringMatching(/^loan-session-[a-z0-9]+$/),
+        createdAt: expect.any(String),
+      }),
+    });
   });
 });
 
