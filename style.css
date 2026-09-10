@@ -105,12 +105,19 @@ a {
 
 .nav-links {
   display: flex;
+  align-items: stretch;
   gap: 6px;
   flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .nav-links a {
-  padding: 26px 11px 23px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 26px 12px 23px;
   color: #2f3848;
   border-bottom: 4px solid transparent;
   font-size: 15px;
@@ -265,6 +272,13 @@ main {
   gap: 7px;
 }
 
+.term-field {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 label,
 .field-label {
   color: #273246;
@@ -353,9 +367,9 @@ input[type="range"] {
 
 .consent-row {
   display: grid;
-  grid-template-columns: 18px 1fr;
+  grid-template-columns: 24px 1fr;
   gap: 12px;
-  align-items: start;
+  align-items: center;
   padding: 15px;
   background: var(--soft);
   border: 1px solid var(--line);
@@ -363,13 +377,14 @@ input[type="range"] {
 }
 
 .consent-row input {
-  width: 18px;
-  min-height: 18px;
-  margin-top: 2px;
+  width: 24px;
+  min-height: 24px;
+  margin: 0;
   accent-color: var(--blue);
 }
 
 .consent-label {
+  cursor: pointer;
   color: #344054;
   font-size: 14px;
 }
@@ -440,6 +455,10 @@ input[type="range"] {
 
 .summary-card {
   padding: 22px;
+}
+
+.summary-card h2.summary-kicker {
+  font-size: 12px;
 }
 
 .approval-box {

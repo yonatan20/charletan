@@ -21,15 +21,15 @@
             <span class="brand-subname">Bank</span>
           </span>
         </a>
-        <div class="nav-links">
-          <a href="#">Checking</a>
-          <a href="#">Savings & CDs</a>
-          <a href="#">Credit Cards</a>
-          <a href="#">Home Loans</a>
-          <a class="active" href="#">Personal Loans</a>
-          <a href="#">Mortgages</a>
-          <a href="#">Support</a>
-        </div>
+        <ul class="nav-links">
+          <li><a href="#">Checking</a></li>
+          <li><a href="#">Savings & CDs</a></li>
+          <li><a href="#">Credit Cards</a></li>
+          <li><a href="#">Home Loans</a></li>
+          <li><a class="active" href="#">Personal Loans</a></li>
+          <li><a href="#">Mortgages</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
         <div class="secure-note" aria-label="Secure session">
           <span class="lock-dot"></span>
           Secure session
@@ -38,7 +38,7 @@
     </header>
 
     <main>
-      <section class="application-shell" aria-labelledby="page-title">
+      <div class="application-shell">
         <div class="intro-panel">
           <p class="eyebrow">Personal loan application</p>
           <h1 id="page-title">Finish your Charlatan personal loan application</h1>
@@ -94,9 +94,9 @@
                 <p class="hint">Used only to personalize your loan terms.</p>
               </div>
 
-              <div class="field">
-                <span class="field-label">Repayment term</span>
-                <div class="term-options" role="radiogroup" aria-label="Repayment term">
+              <fieldset class="field term-field">
+                <legend class="field-label">Repayment term</legend>
+                <div class="term-options">
                   <label>
                     <input type="radio" name="loanTerm" value="36" />
                     <span>36 months</span>
@@ -110,7 +110,7 @@
                     <span>60 months</span>
                   </label>
                 </div>
-              </div>
+              </fieldset>
             </section>
 
             <section class="form-section" aria-labelledby="applicant-title">
@@ -159,10 +159,10 @@
 
               <div class="consent-row">
                 <input id="consent" name="consent" type="checkbox" required />
-                <span id="consent-label" class="consent-label">
+                <label for="consent" id="consent-label" class="consent-label">
                   I agree to receive application updates and authorize Charlatan
                   Bank to verify my information.
-                </span>
+                </label>
               </div>
 
               <div class="form-actions">
@@ -211,9 +211,9 @@
             </section>
           </form>
 
-          <aside class="summary-panel" aria-label="Loan summary">
+          <section class="summary-panel" aria-labelledby="summary-title">
             <div class="summary-card sticky-summary">
-              <p class="summary-kicker">Your estimated offer</p>
+              <h2 class="summary-kicker" id="summary-title">Your estimated offer</h2>
               <div class="approval-box">
                 <span class="approval-dot"></span>
                 Prequalified
@@ -248,9 +248,9 @@
                 <p>Loan specialists are available until 9 PM ET.</p>
               </div>
             </div>
-          </aside>
+          </section>
         </div>
-      </section>
+      </div>
     </main>
 
     <footer class="site-footer">
